@@ -1,147 +1,60 @@
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        let volume = 0.5;
+//target all buttons
 
-       
-        const notes = {
-            'C': 261.63,
-            'C#': 277.18,
-            'D': 293.66,
-            'D#': 311.13,
-            'E': 329.63,
-            'F': 349.23,
-            'F#': 369.99,
-            'G': 392.00,
-            'G#': 415.30,
-            'A': 440.00,
-            'A#': 466.16,
-            'B': 493.88
-        };
+let key1 = document.getElementById("key1");
+let key2 = document.getElementById("key2");
+let key3 = document.getElementById("key3");
+let key4 = document.getElementById("key4");
+let key5 = document.getElementById("key5");
+let key6 = document.getElementById("key6");
+let key7 = document.getElementById("key7");
+let key8 = document.getElementById("key8");
 
-        const whiteKeys = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-        const blackKeys = ['C#', 'D#', null, 'F#', 'G#', 'A#'];
-        const keyboardMap = ['a', 's', 'd', 'f', 'g', 'h', 'j'];
-        const blackKeyMap = ['w', 'e', null, 't', 'y', 'u'];
+//create variables for add music
+let sound1 = new Audio ("sound 1.mp3");
+let sound2 = new Audio ("sound 2.mp3");
+let sound3 = new Audio ("sound 3.mp3");
+let sound4 = new Audio ("sound 4.mp3");
+let sound5 = new Audio ("sound 5.mp3");
+let sound6 = new Audio ("sound 6.mp3");
+let sound7 = new Audio ("sound 7.mp3");
+let sound8 = new Audio ("sound 8.mp3");
 
-        const pianoKeysContainer = document.getElementById('pianoKeys');
-        const volumeSlider = document.getElementById('volumeSlider');
+key1.addEventListener("click" , ()=>{
+    sound1.currentTime=0;
+    sound1.play();
+})
 
-        volumeSlider.addEventListener('input', (e) => {
-            volume = e.target.value / 100;
-        });
+key2.addEventListener("click" , ()=>{
+    sound2.currentTime=0;
+    sound2.play();
+})
 
-        function playNote(frequency) {
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
+key3.addEventListener("click" , ()=>{
+    sound3.currentTime=0;
+    sound3.play();  
+})
 
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
+key4.addEventListener("click" , ()=>{
+    sound4.currentTime=0;
+    sound4.play();
+})
 
-            oscillator.frequency.value = frequency;
-            oscillator.type = 'sine';
+key5.addEventListener("click" , ()=>{
+    sound5.currentTime=0;
+    sound5.play();
+})
 
-            gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+key6.addEventListener("click" , ()=>{
+    sound6.currentTime=0;
+    sound6.play();
+})
 
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.5);
-        }
+key7.addEventListener("click" , ()=>{
+    sound7.currentTime=0;
+    sound7.play();
+})
 
-        function createPiano() {
-            whiteKeys.forEach((note, index) => {
-                const key = document.createElement('div');
-                key.className = 'key white-key';
-                key.dataset.note = note;
-                
-                const label = document.createElement('div');
-                label.className = 'key-label';
-                label.textContent = keyboardMap[index].toUpperCase();
-                key.appendChild(label);
-
-                key.addEventListener('mousedown', () => {
-                    playNote(notes[note]);
-                    key.classList.add('playing');
-                });
-
-                key.addEventListener('mouseup', () => {
-                    key.classList.remove('playing');
-                });
-
-                key.addEventListener('mouseleave', () => {
-                    key.classList.remove('playing');
-                });
-
-                pianoKeysContainer.appendChild(key);
-
-               
-
-
-
-                if (blackKeys[index]) {
-                    const blackKey = document.createElement('div');
-                    blackKey.className = 'key black-key';
-                    blackKey.dataset.note = blackKeys[index];
-                    blackKey.style.left = `${(index + 1) * 52 - 15}px`;
-
-                    const blackLabel = document.createElement('div');
-                    blackLabel.className = 'key-label';
-                    blackLabel.textContent = blackKeyMap[index].toUpperCase();
-                    blackKey.appendChild(blackLabel);
-
-                    blackKey.addEventListener('mousedown', () => {
-                        playNote(notes[blackKeys[index]]);
-                        blackKey.classList.add('playing');
-                    });
-
-                    blackKey.addEventListener('mouseup', () => {
-                        blackKey.classList.remove('playing');
-                    });
-
-                    blackKey.addEventListener('mouseleave', () => {
-                        blackKey.classList.remove('playing');
-                    });
-
-                    pianoKeysContainer.appendChild(blackKey);
-                }
-            });
-        }
-
-   
-        document.addEventListener('keydown', (e) => {
-            const key = e.key.toLowerCase();
-            
-            const whiteIndex = keyboardMap.indexOf(key);
-            if (whiteIndex !== -1) {
-                const note = whiteKeys[whiteIndex];
-                playNote(notes[note]);
-                const keyElement = document.querySelector(`[data-note="${note}"]`);
-                if (keyElement) keyElement.classList.add('playing');
-            }
-
-            const blackIndex = blackKeyMap.indexOf(key);
-            if (blackIndex !== -1 && blackKeys[blackIndex]) {
-                const note = blackKeys[blackIndex];
-                playNote(notes[note]);
-                const keyElement = document.querySelector(`[data-note="${note}"]`);
-                if (keyElement) keyElement.classList.add('playing');
-            }
-        });
-
-        document.addEventListener('keyup', (e) => {
-            const key = e.key.toLowerCase();
-            
-            const whiteIndex = keyboardMap.indexOf(key);
-            if (whiteIndex !== -1) {
-                const note = whiteKeys[whiteIndex];
-                const keyElement = document.querySelector(`[data-note="${note}"]`);
-                if (keyElement) keyElement.classList.remove('playing');
-            }
-
-            const blackIndex = blackKeyMap.indexOf(key);
-            if (blackIndex !== -1 && blackKeys[blackIndex]) {
-                const note = blackKeys[blackIndex];
-                const keyElement = document.querySelector(`[data-note="${note}"]`);
-                if (keyElement) keyElement.classList.remove('playing');
-            }
-        });
-
-        createPiano();
+key8.addEventListener("click" , ()=>{
+    sound8.currentTime=0;
+    sound8.play();
+})
